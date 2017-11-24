@@ -78,7 +78,6 @@ double cmp(pair<int,double> a, pair<int,double> b)
 
 class Test{
     vector<vector<double> > relation_vec,entity_vec;
-	vector<vector<double> > W;
 
 
     vector<int> h,l,r;
@@ -160,7 +159,7 @@ public:
 				    s=oss.str();//
 					if (path_confidence.count(make_pair(s,rel))>0)
 						pr_path = path_confidence[make_pair(s,rel)];
-					pr_path = 1;
+					//pr_path = 1;
 					sum+=calc_path(rel,rel_path)*pr*pr_path;
 				}
 			}
@@ -181,59 +180,26 @@ public:
 				    s=oss.str();//
 					if (path_confidence.count(make_pair(s,rel+relation_num))>0)
 						pr_path = path_confidence[make_pair(s,rel+relation_num)];
-					pr_path = 1;
+					//pr_path = 1;
 					sum+=calc_path(rel+relation_num,rel_path)*pr*pr_path;
 				}
 			}
 		}
         return sum;
     }
-	double f(double x)
-	{
-		return x;
-	}
     double calc_path(int r1,vector<int> rel_path)
     {
-		int num_l = rel_path.size();
         double sum=0;
-		vector<vector<double> >a;
-		a.resize(num_l);
-		a[0] = relation_vec[rel_path[0]];
-		vector<vector<double> >z;
-		z.resize(num_l);
-		for (int l=1; l<num_l; l++)
-		{
-			z[l].resize(n);
-			a[l].resize(n);
-			for (int i=0; i<n; i++)
-			{
-				z[l][i] = 0;//b[index(rel[l-1])][i];
-				for (int k=0; k<n; k++)
-					z[l][i]+=a[l-1][k]*W[k][i]+relation_vec[rel_path[l]][k]*W[k+n][i];
-			}
-			for (int i=0; i<n; i++)
-				a[l][i]=f(z[l][i]);//to be add tanh
-		}
-        for (int i=0; i<n; i++)
-		{
-			double tmp = relation_vec[r1][i]-a[num_l-1][i];
-	        if (L1_flag)
-				sum+=-fabs(tmp);
-			else
-				sum+=-sqr(tmp);
-		}
-        double sum1=0;
         for (int ii=0; ii<n; ii++)
 		{
 			double tmp = relation_vec[r1][ii];
 			for (int j=0; j<rel_path.size(); j++)
 				tmp-=relation_vec[rel_path[j]][ii];
 	        if (L1_flag)
-				sum1+=-fabs(tmp);
+				sum+=-fabs(tmp);
 			else
-				sum1+=-sqr(tmp);
+				sum+=-sqr(tmp);
 		}
-      //  cout<<sum<<' '<<sum1<<endl;
         return 10+sum;
     }
     void run()
@@ -264,29 +230,9 @@ public:
         }
         fclose(f1);
         fclose(f3);
-		//cout<<255<<endl;
-		FILE* f_W = fopen(("W.txt"+version).c_str(),"r");
-		W.resize(2*n);
-		for (int i=0; i<2*n; i++)
-		{
-			W[i].resize(n);
-			//cout<<i<<endl;
-			for (int j=0; j<n; j++)
-			{
-				fscanf(f_W,"%lf",&W[i][j]);
-				//cout<<W[i][j]<<' ';
-			}
-			//cout<<endl;
-		}
-		fclose(f_W);
-		//cout<<265<<endl;
 		
-                /*DDI
-                 *BEGIN */
-                double predict_true_ddi_num = 0;
-                double predict_false_ddi_num = 0;
-                double total_ddi_num = 0;
-                /*END*/
+		
+		
 		double lsum=0 ,lsum_filter= 0;
 		double rsum = 0,rsum_filter=0;
 		double mid_sum = 0,mid_sum_filter=0;
@@ -319,6 +265,7 @@ public:
 			rel_num[rel]+=1;
 			vector<pair<int,double> > a;
 			
+			// YUAN
             // if (rel_type[rel]==0)
             //     one2one_num+=1;
             // else
@@ -374,6 +321,7 @@ public:
 					{
 						lp_n_filter+=1;
 						lp_n_filter_r[rel]+=1;
+						// YUAN
 						// if (rel_type[rel]==0)
                         //     l_one2one+=1;
                         // else
@@ -433,6 +381,7 @@ public:
 						rp_n_filter+=1;
 						rp_n_filter_r[rel]+=1;
 						;
+						                        // YUAN
 												// if (rel_type[rel]==0)
 						                        //     r_one2one+=1;
 						                        // else
@@ -484,23 +433,17 @@ public:
 					break;
 				}
 			}
-			//if (testid%100==0)
-			if (testid == fb_l.size()/2 - 1)
+			if (testid%100==0)
 			{
 				cout<<testid<<":"<<"\t"<<lsum/(testid+1)<<' '<<lp_n/(testid+1)<<' '<<rsum/(testid+1)<<' '<<rp_n/(testid+1)<<"\t"<<lsum_filter/(testid+1)<<' '<<lp_n_filter/(testid+1)<<' '<<rsum_filter/(testid+1)<<' '<<rp_n_filter/(testid+1)<<endl;
 				cout<<"\t"<<mid_sum/(testid+1)<<' '<<mid_p_n/(testid+1)<<"\t"<<mid_sum_filter/(testid+1)<<' '<<mid_p_n_filter/(testid+1)<<endl;
-				/*
-                cout<<l_one2one<<" "<<l_one2n<<" "<<l_n2one<<' '<<l_n2n<<endl;
-                cout<<r_one2one<<" "<<r_one2n<<" "<<r_n2one<<' '<<r_n2n<<endl;
-                cout<<one2one_num<<" "<<one2n_num<<" "<<n2one_num<<' '<<n2n_num<<endl;
-                cout<<l_one2one/one2one_num<<" "<<l_one2n/one2n_num<<" "<<l_n2one/n2one_num<<' '<<l_n2n/n2n_num<<endl;
-                cout<<r_one2one/one2one_num<<" "<<r_one2n/one2n_num<<" "<<r_n2one/n2one_num<<' '<<r_n2n/n2n_num<<endl;
-				*/
+              //  cout<<l_one2one<<" "<<l_one2n<<" "<<l_n2one<<' '<<l_n2n<<endl;
+              //  cout<<r_one2one<<" "<<r_one2n<<" "<<r_n2one<<' '<<r_n2n<<endl;
+              //  cout<<one2one_num<<" "<<one2n_num<<" "<<n2one_num<<' '<<n2n_num<<endl;
+              //  cout<<l_one2one/one2one_num<<" "<<l_one2n/one2n_num<<" "<<l_n2one/n2one_num<<' '<<l_n2n/n2n_num<<endl;
+              //  cout<<r_one2one/one2one_num<<" "<<r_one2n/one2n_num<<" "<<r_n2one/n2one_num<<' '<<r_n2n/n2n_num<<endl;
 				
 			}
-
-
-
 		}
 	//	for (map<pair<int,int>,int>::iterator it = e1_e2.begin(); it!=e1_e2.end(); it++)
 	//		fprintf(f_e1_e2,"%d %d\n",it->first.first,it->first.second);
@@ -508,26 +451,14 @@ public:
 	//	cout<<"\t"<<mid_sum/(fb_l.size()/2+1)<<' '<<mid_p_n/(fb_l.size()/2+1)<<"\t"<<mid_sum_filter/(fb_l.size()/2+1)<<' '<<mid_p_n_filter/(fb_l.size()/2+1)<<endl;
 	//	cout<<"left:"<<lsum/fb_l.size()<<'\t'<<lp_n/fb_l.size()<<"\t"<<lsum_filter/fb_l.size()<<'\t'<<lp_n_filter/fb_l.size()<<endl;
 	//	cout<<"right:"<<rsum/fb_r.size()<<'\t'<<rp_n/fb_r.size()<<'\t'<<rsum_filter/fb_r.size()<<'\t'<<rp_n_filter/fb_r.size()<<endl;
-		for (int rel=0; rel<relation_num; rel++)
+		/*for (int rel=0; rel<relation_num; rel++)
 		{
 			int num = rel_num[rel];
-			/*cout<<"rel:"<<id2relation[rel]<<' '<<num<<endl;
+			cout<<"rel:"<<id2relation[rel]<<' '<<num<<endl;
 			cout<<"left:"<<lsum_r[rel]/num<<'\t'<<lp_n_r[rel]/num<<"\t"<<lsum_filter_r[rel]/num<<'\t'<<lp_n_filter_r[rel]/num<<endl;
 			cout<<"right:"<<rsum_r[rel]/num<<'\t'<<rp_n_r[rel]/num<<'\t'<<rsum_filter_r[rel]/num<<'\t'<<rp_n_filter_r[rel]/num<<endl;
-			cout<<"mid:"<<mid_sum_r[rel]/num<<'\t'<<mid_p_n_r[rel]/num<<'\t'<<mid_sum_filter_r[rel]/num<<'\t'<<mid_p_n_filter_r[rel]/num<<endl;*/
-            if (id2relation[rel] == "ddi") {
-			    total_ddi_num = num;
-			    predict_true_ddi_num = mid_p_n_filter_r[rel];
-			}
-			if (id2relation[rel] == "sim") {
-			    predict_false_ddi_num = num - mid_p_n_filter_r[rel];
-			}
-		}
-		double recall = predict_true_ddi_num/total_ddi_num;
-		double precision = predict_true_ddi_num/(predict_false_ddi_num + predict_true_ddi_num);
-		double f1_score = 2 * recall * precision / (recall + precision);
-
-		cout<<"*precision:"<<precision<<"\trecall:"<<recall<<"\tf1_score:"<<f1_score<<endl;
+			cout<<"mid:"<<mid_sum_r[rel]/num<<'\t'<<mid_p_n_r[rel]/num<<'\t'<<mid_sum_filter_r[rel]/num<<'\t'<<mid_p_n_filter_r[rel]/num<<endl;
+		}*/
     }
 
 };
@@ -706,6 +637,7 @@ void prepare()
 		}
 	}
 	fclose(f_confidence);
+	//YUAN
     // FILE* f7 = fopen("../data/n2n.txt","r");
     // {
     //     double x,y;
@@ -743,7 +675,6 @@ int main(int argc,char**argv)
             used = argv[2];
         prepare();
         test.run();
-		cout<<"******\n\n";
 	}
 }
 

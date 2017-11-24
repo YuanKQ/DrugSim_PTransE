@@ -436,7 +436,8 @@ public:
 					break;
 				}
 			}
-			if (testid%100==0)
+			//if (testid%100==0)
+			if (testid == fb_l.size()/2 - 1)
 			{
 				cout<<testid<<":"<<"\t"<<lsum/(testid+1)<<' '<<lp_n/(testid+1)<<' '<<rsum/(testid+1)<<' '<<rp_n/(testid+1)<<"\t"<<lsum_filter/(testid+1)<<' '<<lp_n_filter/(testid+1)<<' '<<rsum_filter/(testid+1)<<' '<<rp_n_filter/(testid+1)<<endl;
 				cout<<"\t"<<mid_sum/(testid+1)<<' '<<mid_p_n/(testid+1)<<"\t"<<mid_sum_filter/(testid+1)<<' '<<mid_p_n_filter/(testid+1)<<endl;
@@ -460,20 +461,24 @@ public:
                 for (int rel=0; rel<relation_num; rel++)
 		{
 			int num = rel_num[rel];
-			cout<<"rel:"<<id2relation[rel]<<' '<<num<<endl;
+			/*cout<<"rel:"<<id2relation[rel]<<' '<<num<<endl;
 			cout<<"left:"<<lsum_r[rel]/num<<'\t'<<lp_n_r[rel]/num<<"\t"<<lsum_filter_r[rel]/num<<'\t'<<lp_n_filter_r[rel]/num<<endl;
 			cout<<"right:"<<rsum_r[rel]/num<<'\t'<<rp_n_r[rel]/num<<'\t'<<rsum_filter_r[rel]/num<<'\t'<<rp_n_filter_r[rel]/num<<endl;
-			cout<<"mid:"<<mid_sum_r[rel]/num<<'\t'<<mid_p_n_r[rel]/num<<'\t'<<mid_sum_filter_r[rel]/num<<'\t'<<mid_p_n_filter_r[rel]/num<<endl;
-                        if (id2relation[rel] == "ddi") {
-                           total_ddi_num = num;
-                           predict_true_ddi_num = mid_p_n_filter_r[rel];
-                        }
-                        if (id2relation[rel] == "sim") {
-                            predict_false_ddi_num = num - mid_p_n_filter_r[rel];
-                        } 
+			cout<<"mid:"<<mid_sum_r[rel]/num<<'\t'<<mid_p_n_r[rel]/num<<'\t'<<mid_sum_filter_r[rel]/num<<'\t'<<mid_p_n_filter_r[rel]/num<<endl;*/
+			if (id2relation[rel] == "ddi") {
+			   total_ddi_num = num;
+			   predict_true_ddi_num = mid_p_n_filter_r[rel];
+			}
+			if (id2relation[rel] == "sim") {
+				predict_false_ddi_num = num - mid_p_n_filter_r[rel];
+			}
 
 		}
-                 cout<<"*recall:"<< predict_true_ddi_num/total_ddi_num<<"\tprecision:"<<predict_true_ddi_num/(predict_false_ddi_num + predict_true_ddi_num)<<endl;
+		double recall = predict_true_ddi_num/total_ddi_num;
+		double precision = predict_true_ddi_num/(predict_false_ddi_num + predict_true_ddi_num);
+		double f1_score = 2 * recall * precision / (recall + precision);
+
+		cout<<"*precision:"<<precision<<"\trecall:"<<recall<<"\tf1_score:"<<f1_score<<endl;
     }
 
 };
@@ -689,6 +694,8 @@ int main(int argc,char**argv)
             used = argv[2];
         prepare();
         test.run();
-    }
+		cout<<"******\n\n";
+	}
+
 }
 

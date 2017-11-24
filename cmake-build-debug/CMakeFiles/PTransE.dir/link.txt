@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/PTransE.dir/PTransE_add/Test_TransE_path.cpp.o CMakeFiles/PTransE.dir/PTransE_add/Train_TransE_path.cpp.o CMakeFiles/PTransE.dir/PTransE_mul/Test_TransE_path.cpp.o CMakeFiles/PTransE.dir/PTransE_mul/Train_TransE_path.cpp.o CMakeFiles/PTransE.dir/PTransE_RNN/Test_TransE_path.cpp.o CMakeFiles/PTransE.dir/PTransE_RNN/Train_TransE_path.cpp.o  -o PTransE 

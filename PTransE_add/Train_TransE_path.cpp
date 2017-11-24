@@ -84,7 +84,7 @@ public:
 		fb_path.push_back(path_list);
         ok[make_pair(x,z)][y]=1;
     }
-    void run()
+    void run(int margin)
     {
         n = 100;
         rate = 0.0001;
@@ -113,8 +113,16 @@ public:
             norm(entity_vec[i]);
         }
 
-        bfgs();
+        bfgs(margin);
     }
+
+	void setN(int n) {
+		Train::n = n;
+	}
+
+	void setRate(double rate) {
+		Train::rate = rate;
+	}
 
 private:
     int n;
@@ -144,10 +152,12 @@ private:
         return res;
     }
 
-    void bfgs()
+    void bfgs(int margin)
     {
-        double margin = 1,margin_rel = 2;
-        cout<<"margin="<<' '<<margin<<"margin_rel="<<margin_rel<<endl;
+//        double margin = 1,margin_rel = 2;
+//        cout<<"margin="<<' '<<margin<<"margin_rel="<<margin_rel<<endl;
+        cout<<"margin="<<' '<<margin<<endl;
+
         res=0;
         int nbatches=100;
         int neval = 2000;
@@ -227,7 +237,8 @@ private:
 	            relation_vec = relation_tmp;
 	            entity_vec = entity_tmp;
          	}
-            cout<<"eval:"<<eval<<' '<<res<<endl;
+			if (eval % 100 == 0)
+				cout<<"eval:"<<eval<<' '<<res<<endl;
             FILE* f2 = fopen(("relation2vec.txt"+version).c_str(),"w");
             FILE* f3 = fopen(("entity2vec.txt"+version).c_str(),"w");
             for (int i=0; i<relation_num; i++)
@@ -425,14 +436,28 @@ void prepare()
 int main(int argc,char**argv)
 {
     srand((unsigned) time(NULL));
-    if (argc!=2)
-        return 0;
-    else
-    {
-        version = argv[1];
-        prepare();
-        train.run();
-    }
+//    if (argc!=2)
+//        return 0;
+//    else
+//    {
+//        version = argv[1];
+//        prepare();
+//        train.run();
+//    }
+
+	if (argc!=5)
+		return 0;
+	else
+	{
+		// version: argv[1], n(demension of vector): argv[2], learning rate: argv[3], margin: argv[4]
+//		cout<<"n: "<<argv[2]<<"\trate: "<<argv[3]<<"\tmargin: "<<argv[4]<<endl;
+		version = argv[1];
+		train.setN(atoi(argv[2]));
+		train.setRate(atof(argv[3]));
+		prepare();
+		train.run(atoi(argv[4]));
+		cout<<"------"<<endl;
+	}
 }
 
 

@@ -281,12 +281,6 @@ public:
 		fclose(f_W);
 		//cout<<265<<endl;
 		
-                /*DDI
-                 *BEGIN */
-                double predict_true_ddi_num = 0;
-                double predict_false_ddi_num = 0;
-                double total_ddi_num = 0;
-                /*END*/
 		double lsum=0 ,lsum_filter= 0;
 		double rsum = 0,rsum_filter=0;
 		double mid_sum = 0,mid_sum_filter=0;
@@ -319,16 +313,16 @@ public:
 			rel_num[rel]+=1;
 			vector<pair<int,double> > a;
 			
-            // if (rel_type[rel]==0)
-            //     one2one_num+=1;
-            // else
-            // if (rel_type[rel]==1)
-            //     n2one_num+=1;
-            // else
-            // if (rel_type[rel]==2)
-            //     one2n_num+=1;
-            // else
-            //     n2n_num+=1;
+            if (rel_type[rel]==0)
+                one2one_num+=1;
+            else
+            if (rel_type[rel]==1)
+                n2one_num+=1;
+            else
+            if (rel_type[rel]==2)
+                one2n_num+=1;
+            else
+                n2n_num+=1;
 			
 
 			double ttt=0;
@@ -374,16 +368,16 @@ public:
 					{
 						lp_n_filter+=1;
 						lp_n_filter_r[rel]+=1;
-						// if (rel_type[rel]==0)
-                        //     l_one2one+=1;
-                        // else
-                        // if (rel_type[rel]==1)
-                        //     l_n2one+=1;
-                        // else
-                        // if (rel_type[rel]==2)
-                        //     l_one2n+=1;
-                        // else
-                        //     l_n2n+=1;
+						if (rel_type[rel]==0)
+                            l_one2one+=1;
+                        else
+                        if (rel_type[rel]==1)
+                            l_n2one+=1;
+                        else
+                        if (rel_type[rel]==2)
+                            l_one2n+=1;
+                        else
+                            l_n2n+=1;
 						
 					}
 					//if (a.size()-i>20)
@@ -433,16 +427,16 @@ public:
 						rp_n_filter+=1;
 						rp_n_filter_r[rel]+=1;
 						;
-												// if (rel_type[rel]==0)
-						                        //     r_one2one+=1;
-						                        // else
-						                        // if (rel_type[rel]==1)
-						                        //     r_n2one+=1;
-						                        // else
-						                        // if (rel_type[rel]==2)
-						                        //     r_one2n+=1;
-						                        // else
-						                        //     r_n2n+=1;
+												if (rel_type[rel]==0)
+						                            r_one2one+=1;
+						                        else
+						                        if (rel_type[rel]==1)
+						                            r_n2one+=1;
+						                        else
+						                        if (rel_type[rel]==2)
+						                            r_one2n+=1;
+						                        else
+						                            r_n2n+=1;
 						
 					}
 					//if (a.size()-i>20)
@@ -484,8 +478,7 @@ public:
 					break;
 				}
 			}
-			//if (testid%100==0)
-			if (testid == fb_l.size()/2 - 1)
+			if (testid%100==0)
 			{
 				cout<<testid<<":"<<"\t"<<lsum/(testid+1)<<' '<<lp_n/(testid+1)<<' '<<rsum/(testid+1)<<' '<<rp_n/(testid+1)<<"\t"<<lsum_filter/(testid+1)<<' '<<lp_n_filter/(testid+1)<<' '<<rsum_filter/(testid+1)<<' '<<rp_n_filter/(testid+1)<<endl;
 				cout<<"\t"<<mid_sum/(testid+1)<<' '<<mid_p_n/(testid+1)<<"\t"<<mid_sum_filter/(testid+1)<<' '<<mid_p_n_filter/(testid+1)<<endl;
@@ -498,9 +491,6 @@ public:
 				*/
 				
 			}
-
-
-
 		}
 	//	for (map<pair<int,int>,int>::iterator it = e1_e2.begin(); it!=e1_e2.end(); it++)
 	//		fprintf(f_e1_e2,"%d %d\n",it->first.first,it->first.second);
@@ -508,26 +498,14 @@ public:
 	//	cout<<"\t"<<mid_sum/(fb_l.size()/2+1)<<' '<<mid_p_n/(fb_l.size()/2+1)<<"\t"<<mid_sum_filter/(fb_l.size()/2+1)<<' '<<mid_p_n_filter/(fb_l.size()/2+1)<<endl;
 	//	cout<<"left:"<<lsum/fb_l.size()<<'\t'<<lp_n/fb_l.size()<<"\t"<<lsum_filter/fb_l.size()<<'\t'<<lp_n_filter/fb_l.size()<<endl;
 	//	cout<<"right:"<<rsum/fb_r.size()<<'\t'<<rp_n/fb_r.size()<<'\t'<<rsum_filter/fb_r.size()<<'\t'<<rp_n_filter/fb_r.size()<<endl;
-		for (int rel=0; rel<relation_num; rel++)
+		/*for (int rel=0; rel<relation_num; rel++)
 		{
 			int num = rel_num[rel];
-			/*cout<<"rel:"<<id2relation[rel]<<' '<<num<<endl;
+			cout<<"rel:"<<id2relation[rel]<<' '<<num<<endl;
 			cout<<"left:"<<lsum_r[rel]/num<<'\t'<<lp_n_r[rel]/num<<"\t"<<lsum_filter_r[rel]/num<<'\t'<<lp_n_filter_r[rel]/num<<endl;
 			cout<<"right:"<<rsum_r[rel]/num<<'\t'<<rp_n_r[rel]/num<<'\t'<<rsum_filter_r[rel]/num<<'\t'<<rp_n_filter_r[rel]/num<<endl;
-			cout<<"mid:"<<mid_sum_r[rel]/num<<'\t'<<mid_p_n_r[rel]/num<<'\t'<<mid_sum_filter_r[rel]/num<<'\t'<<mid_p_n_filter_r[rel]/num<<endl;*/
-            if (id2relation[rel] == "ddi") {
-			    total_ddi_num = num;
-			    predict_true_ddi_num = mid_p_n_filter_r[rel];
-			}
-			if (id2relation[rel] == "sim") {
-			    predict_false_ddi_num = num - mid_p_n_filter_r[rel];
-			}
-		}
-		double recall = predict_true_ddi_num/total_ddi_num;
-		double precision = predict_true_ddi_num/(predict_false_ddi_num + predict_true_ddi_num);
-		double f1_score = 2 * recall * precision / (recall + precision);
-
-		cout<<"*precision:"<<precision<<"\trecall:"<<recall<<"\tf1_score:"<<f1_score<<endl;
+			cout<<"mid:"<<mid_sum_r[rel]/num<<'\t'<<mid_p_n_r[rel]/num<<'\t'<<mid_sum_filter_r[rel]/num<<'\t'<<mid_p_n_filter_r[rel]/num<<endl;
+		}*/
     }
 
 };
@@ -594,7 +572,7 @@ void prepare()
     }
     fclose(f_kb);
 	cout<<415<<endl;
-    FILE* f_path = fopen("../data/path2.txt","r");
+    FILE* f_path = fopen("../data/path.txt","r");
 	while (fscanf(f_path,"%s",buf)==1)
     {
         string s1=buf;
@@ -706,28 +684,28 @@ void prepare()
 		}
 	}
 	fclose(f_confidence);
-    // FILE* f7 = fopen("../data/n2n.txt","r");
-    // {
-    //     double x,y;
-    //     while (fscanf(f7,"%lf%lf",&x,&y)==2)
-    //     {
-    //         //cout<<x<<' '<<y<<endl;
-    //         if (x<1.5)
-    //         {
-    //             if (y<1.5)
-    //                 rel_type.push_back(0);
-    //             else
-    //                 rel_type.push_back(1);
+    FILE* f7 = fopen("../data/n2n.txt","r");
+    {
+        double x,y;
+        while (fscanf(f7,"%lf%lf",&x,&y)==2)
+        {
+            //cout<<x<<' '<<y<<endl;
+            if (x<1.5)
+            {
+                if (y<1.5)
+                    rel_type.push_back(0);
+                else
+                    rel_type.push_back(1);
 
-    //         }
-    //         else
-    //             if (y<1.5)
-    //                 rel_type.push_back(2);
-    //             else
-    //                 rel_type.push_back(3);
-    //     }
-    // }
-    // fclose(f7);
+            }
+            else
+                if (y<1.5)
+                    rel_type.push_back(2);
+                else
+                    rel_type.push_back(3);
+        }
+    }
+    fclose(f7);
 	
 }
 
@@ -743,7 +721,6 @@ int main(int argc,char**argv)
             used = argv[2];
         prepare();
         test.run();
-		cout<<"******\n\n";
-	}
+    }
 }
 

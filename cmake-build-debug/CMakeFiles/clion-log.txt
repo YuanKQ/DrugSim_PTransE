@@ -1,0 +1,4 @@
+/home/yuan/Programs/clion-2017.2.3/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/yuan/Code/research_code/DDI/PTransE/PTransE_sim_3
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/yuan/Code/research_code/DDI/PTransE/PTransE_sim_3/cmake-build-debug
